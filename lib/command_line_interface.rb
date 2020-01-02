@@ -1,6 +1,7 @@
 class CommandLineInterface
 
     def run
+        system "clear"
         greet
     end
 
@@ -24,39 +25,55 @@ class CommandLineInterface
         if ["1", "2"].include?(input)
             if input == "1" 
                p Proxy.all
+               puts "-------------------"
+               main_menu
             elsif input == "2"
+                system "clear"
                 get_proxy_path
             end
         elsif input == "3"
             exit_message
         else 
-            not_an_option
+            not_an_option("main menu")
         end
     end
 
     def get_proxy_path
-        system "clear"
         puts ""
         puts "Please give path to proxy file."
         proxies = parse_proxy_file(get_proxy_file)
-        system "clear"
+        add_to_proxies(proxies)
+    end
+
+    def add_to_proxies(proxies)
         puts "Add to proxies?"
         puts "y / n"
         input = gets.chomp
         if input == "y" 
+            rejectedcount = 0 #doesn't work need to revisit and fix
             proxies.each do |proxy|
-                 Proxy.create(ip_address: proxy[0], port: proxy[1])
+                if Proxy.all.include?(proxy[0])
+                    rejectedcount += 1
+                else 
+                    Proxy.create(ip_address: proxy[0], port: proxy[1])
+                end
             end
-        else 
+            puts ""
+            puts "Added all, rejected #{rejectedcount} for already existing."
+            puts ""
+            main_menu
+        elsif input == "n" 
             system "clear"
             main_menu
+        else 
+            not_an_option("add to proxies")
         end   
     end
 
     def get_proxy_file
-        test_path = "/Users/azhang/Downloads/socks5_proxies.txt" #change to gets.chomp
-        # proxy_file_path = gets.chomp
-        proxy_file_path = test_path
+        # test_path = "/Users/azhang/Downloads/socks5_proxies.txt" #change to gets.chomp
+        proxy_file_path = gets.chomp
+        # proxy_file_path = test_path
         puts ""
         until proxy_file_path.include?("Users")
             puts "Enter valid file path"
@@ -67,16 +84,21 @@ class CommandLineInterface
         proxy_file
     end
 
-    def not_an_option
+    def not_an_option(page)
         system "clear"
         puts "Try not fat fingering, that's not an option"
         puts ""
+        if page == "main menu"
         main_menu
+        elsif page == "add to proxies"
+            add_to_proxies
+        end 
     end
 
     def exit_message
         system "clear"
         puts "Sucks."
+        Proxy.delete_all
         exit
     end
 
