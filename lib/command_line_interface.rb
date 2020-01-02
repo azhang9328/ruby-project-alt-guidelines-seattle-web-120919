@@ -12,8 +12,9 @@ class CommandLineInterface
         puts "Add to proxies?"
         puts "y / n"
         proxies.each do |proxy|
-            
+            Proxy.create(ip_address: proxy[0], port: proxy[1])
         end
+        binding.pry
     end
 
     def get_proxy_file
