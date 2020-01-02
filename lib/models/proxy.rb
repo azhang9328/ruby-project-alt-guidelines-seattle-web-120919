@@ -1,6 +1,4 @@
 class Proxy < ActiveRecord::Base 
-    belongs_to :rsaccounts
-    has_many :emails, through: :rsaccounts
+    has_many :proxies_accounts
+    has_many :accounts, through: :proxies_accounts
 end
-    # Email many -> accs one -> Proxy
-    # Email many <-> proxies through accs

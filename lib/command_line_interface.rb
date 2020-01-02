@@ -21,31 +21,23 @@ class CommandLineInterface
         puts "Main Menu"
         puts "---------"
         puts ""
-        puts "1. View Proxies"
-        puts "2. Add New Proxies"
-        puts "3. View RS Accounts"
-        puts "4. Add New RS Accounts"
-        puts "5. Ping Check"
-        puts "6. Assign Proxies To RS Accounts"        
+        puts "1. Proxies Options"
+        puts "2. RS Accounts Options"
+        puts "3. Emails Options"
+        puts "4. Ping Check"
+        puts "5. Assign Stuff"        
         puts "0. Exit"
         input = gets.chomp
         if ["1", "2", "3", "4", "5"].include?(input)
             if input == "1" 
-               p Proxy.all #Make it print info cleanly
-               puts "-------------------"
-               main_menu
+                proxies_page
             elsif input == "2"
-                system "clear"
-                get_proxy_path
+                rsaccounts_page
             elsif input == "3"
-                p Rsaccount.all #make it print info cleanly
-                puts "-------------------"
-                main_menu
-            elsif input == "4" 
-                main_menu #replace main menu return with adding accounts
-            elsif input == "5"
+                emails_page
+            elsif input == "4"
                 ping_check_all_proxies
-            elsif input == "6"
+            elsif input == "5"
                 assign_page
             end
         elsif input == "0"
@@ -53,6 +45,66 @@ class CommandLineInterface
         else 
             not_an_option("main menu")
         end
+    end
+
+    def emails_page
+        puts "--------------------"
+        puts "1. View Emails"
+        puts "2. Add New Emails"
+        puts "3. Main Menu"
+        input = gets.chomp
+        if ["1", "2", "3"].include?(input)
+            if input == "1" 
+               p Email.all #Make it print info cleanly
+               puts "-------------------"
+               emails_page
+            elsif input == "2"
+                system "clear"
+
+            elsif input == "3"
+                main_menu
+            end 
+        end 
+    end
+
+    def rsaccounts_page
+        puts "--------------------"
+        puts "1. View RS Accounts"
+        puts "2. Add New RS Accounts"
+        puts "3. Main Menu"
+        input = gets.chomp
+        if ["1", "2", "3"].include?(input)
+            if input == "1" 
+               p Rsaccount.all #Make it print info cleanly
+               puts "-------------------"
+               rsaccounts_page
+            elsif input == "2"
+                system "clear"
+
+            elsif input == "3"
+                main_menu
+            end 
+        end 
+    end
+
+    def proxies_page
+        puts "--------------------"
+        puts "1. View Proxies"
+        puts "2. Add New Proxies"
+        puts "3. Main Menu"
+        input = gets.chomp
+        if ["1", "2", "3"].include?(input)
+            if input == "1" 
+               p Proxy.all #Make it print info cleanly
+               puts "-------------------"
+               proxies_page
+            elsif input == "2"
+                system "clear"
+                get_proxy_path
+            elsif input == "3"
+                main_menu
+            end 
+        end 
     end
 
     def assign_page
@@ -72,9 +124,16 @@ class CommandLineInterface
     end
 
     def assign_proxies_to_new_rs
-        Rsaccount.all.each do |account|
-            account.proxy
+        # noassignedproxy = []
+        # Rsaccount.all.each do |account|
+        #     if Proxies_Account.where("rsaccount_id = ?", account.id).empty?
+        #         noassignedproxy.push(account)
+        #     end
+        # end
+        noassignedproxy = Rsaccount.all.find_all do |account|
+            Proxies_Account.where("rsaccount_id = ?", account.id).empty?
         end
+        p noassignedproxy
     end
 
     def ping_check_all_proxies
@@ -108,7 +167,7 @@ class CommandLineInterface
             addedcount = 0
             rejectedcount = 0 
             proxies.each do |proxy|
-                if !Proxy.all.where("ip_address == #{proxy[0]}") #reject if already have broke
+                if !Proxy.all.where("ip_address = #{proxy[0]}") #reject if already have broke
                     rejectedcount += 1
                 else 
                     Proxy.create(ip_address: proxy[0], port: proxy[1])
@@ -130,7 +189,6 @@ class CommandLineInterface
     def get_proxy_file
         # test_path = "/Users/azhang/Downloads/5_socks5_proxies.txt" #change to gets.chomp
         proxy_file_path = gets.chomp
-        # proxy_file_path = test_path
         puts ""
         until proxy_file_path.include?("Users")
             puts "Enter valid file path"

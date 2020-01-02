@@ -1,7 +1,5 @@
 class Rsaccount < ActiveRecord::Base
-    has_one :proxies
-    belongs_to :rsaccounts
+    belongs_to :email
+    has_many :proxies_accounts
+    has_many :proxies, through: :proxies_accounts
 end
-
-    # Email many -> accs one -> Proxy
-    # Email many <-> proxies through accs
