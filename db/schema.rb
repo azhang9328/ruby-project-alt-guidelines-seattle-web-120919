@@ -10,16 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 3) do
+ActiveRecord::Schema.define(version: 4) do
 
-  create_table "assignments", force: :cascade do |t|
-    t.integer "proxy_id"
-    t.integer "rsaccount_id"
+  create_table "emails", force: :cascade do |t|
+    t.string "login"
+    t.string "password"
   end
 
   create_table "proxies", force: :cascade do |t|
     t.string "ip_address"
     t.integer "port"
+  end
+
+  create_table "proxies_accounts", force: :cascade do |t|
+    t.integer "proxy_id"
+    t.integer "rsaccount_id"
   end
 
   create_table "rsaccounts", force: :cascade do |t|

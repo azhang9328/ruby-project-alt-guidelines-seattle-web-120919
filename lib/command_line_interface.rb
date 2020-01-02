@@ -1,5 +1,8 @@
 class CommandLineInterface
 
+    # Email many -> accs one -> Proxy
+    # Email many <-> proxies through accs
+
     def run
         system "clear"
         greet
@@ -23,7 +26,7 @@ class CommandLineInterface
         puts "3. View RS Accounts"
         puts "4. Add New RS Accounts"
         puts "5. Ping Check"
-        puts "6. Assign Proxies To RS Accounts"
+        puts "6. Assign Proxies To RS Accounts"        
         puts "0. Exit"
         input = gets.chomp
         if ["1", "2", "3", "4", "5"].include?(input)
@@ -43,12 +46,34 @@ class CommandLineInterface
             elsif input == "5"
                 ping_check_all_proxies
             elsif input == "6"
-
+                assign_page
             end
         elsif input == "0"
             exit_message
         else 
             not_an_option("main menu")
+        end
+    end
+
+    def assign_page
+        system "clear"
+        puts "1. Assign Proxies To New RS Accounts"
+        puts "0. Back To Main Menu"
+        input = gets.chomp
+        if ["1"].include?(input)
+            if input == "1" 
+                assign_proxies_to_new_rs
+            end
+        elsif input == "0"
+            main_menu
+        else 
+            not_an_option("assign page")
+        end
+    end
+
+    def assign_proxies_to_new_rs
+        Rsaccount.all.each do |account|
+            account.proxy
         end
     end
 
@@ -83,7 +108,7 @@ class CommandLineInterface
             addedcount = 0
             rejectedcount = 0 
             proxies.each do |proxy|
-                if !Proxy.all.where("ip_address == #{proxy[0]}")
+                if !Proxy.all.where("ip_address == #{proxy[0]}") #reject if already have broke
                     rejectedcount += 1
                 else 
                     Proxy.create(ip_address: proxy[0], port: proxy[1])
@@ -103,7 +128,7 @@ class CommandLineInterface
     end
 
     def get_proxy_file
-        # test_path = "/Users/azhang/Downloads/socks5_proxies.txt" #change to gets.chomp
+        # test_path = "/Users/azhang/Downloads/5_socks5_proxies.txt" #change to gets.chomp
         proxy_file_path = gets.chomp
         # proxy_file_path = test_path
         puts ""
@@ -124,6 +149,7 @@ class CommandLineInterface
         main_menu
         elsif page == "add to proxies"
             add_to_proxies
+        elsif page == "assign page"
         end 
     end
 
