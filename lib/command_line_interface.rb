@@ -23,6 +23,7 @@ class CommandLineInterface
         puts "3. View RS Accounts"
         puts "4. Add New RS Accounts"
         puts "5. Ping Check"
+        puts "6. Assign Proxies To RS Accounts"
         puts "0. Exit"
         input = gets.chomp
         if ["1", "2", "3", "4", "5"].include?(input)
@@ -41,6 +42,8 @@ class CommandLineInterface
                 main_menu #replace main menu return with adding accounts
             elsif input == "5"
                 ping_check_all_proxies
+            elsif input == "6"
+
             end
         elsif input == "0"
             exit_message
