@@ -20,18 +20,26 @@ class CommandLineInterface
         puts ""
         puts "1. View Proxies"
         puts "2. Add New Proxies"
-        puts "3. Exit"
+        puts "3. View RS Accounts"
+        puts "4. Add New RS Accounts"
+        puts "9. Exit"
         input = gets.chomp
-        if ["1", "2"].include?(input)
+        if ["1", "2", "3", "4"].include?(input)
             if input == "1" 
-               p Proxy.all
+               p Proxy.all #Make it print info cleanly
                puts "-------------------"
                main_menu
             elsif input == "2"
                 system "clear"
                 get_proxy_path
+            elsif input == "3"
+                p Rsaccount.all #make it print info cleanly
+                puts "-------------------"
+                main_menu
+            elsif input == "4" 
+                main_menu #replace main menu return with adding accounts
             end
-        elsif input == "3"
+        elsif input == "9"
             exit_message
         else 
             not_an_option("main menu")
@@ -53,7 +61,7 @@ class CommandLineInterface
             addedcount = 0
             rejectedcount = 0 
             proxies.each do |proxy|
-                if Proxy.all.where("ip_address == #{proxy[0]}")
+                if !Proxy.all.where("ip_address == #{proxy[0]}")
                     rejectedcount += 1
                 else 
                     Proxy.create(ip_address: proxy[0], port: proxy[1])
@@ -100,7 +108,6 @@ class CommandLineInterface
     def exit_message
         system "clear"
         puts "Sucks."
-        Proxy.delete_all
         exit
     end
 
