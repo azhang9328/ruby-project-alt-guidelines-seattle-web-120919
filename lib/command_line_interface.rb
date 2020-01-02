@@ -50,16 +50,18 @@ class CommandLineInterface
         puts "y / n"
         input = gets.chomp
         if input == "y" 
-            rejectedcount = 0 #doesn't work need to revisit and fix
+            addedcount = 0
+            rejectedcount = 0 
             proxies.each do |proxy|
-                if Proxy.all.include?(proxy[0])
+                if Proxy.all.where("ip_address == #{proxy[0]}")
                     rejectedcount += 1
                 else 
                     Proxy.create(ip_address: proxy[0], port: proxy[1])
+                    addedcount += 1
                 end
             end
             puts ""
-            puts "Added all, rejected #{rejectedcount} for already existing."
+            puts "Added #{addedcount}, rejected #{rejectedcount} for already existing."
             puts ""
             main_menu
         elsif input == "n" 
