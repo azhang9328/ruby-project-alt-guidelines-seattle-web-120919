@@ -5,6 +5,7 @@ class CreateRsaccountsTable < ActiveRecord::Migration[5.1]
         t.string :password
         t.string :username
         t.boolean :banned
+        t.boolean :unban_request
         t.integer :email_id
       end
     end

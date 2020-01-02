@@ -32,6 +32,7 @@ ActiveRecord::Schema.define(version: 4) do
     t.string "password"
     t.string "username"
     t.boolean "banned"
+    t.boolean "unban_request"
     t.integer "email_id"
   end
 

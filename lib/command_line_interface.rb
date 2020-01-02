@@ -24,20 +24,25 @@ class CommandLineInterface
         puts "1. Proxies Options"
         puts "2. RS Accounts Options"
         puts "3. Emails Options"
-        puts "4. Ping Check"
+        puts "4. Proxy Check"
         puts "5. Assign Stuff"        
         puts "0. Exit"
         input = gets.chomp
         if ["1", "2", "3", "4", "5"].include?(input)
             if input == "1" 
+                system "clear"
                 proxies_page
             elsif input == "2"
+                system "clear"
                 rsaccounts_page
             elsif input == "3"
+                system "clear"
                 emails_page
             elsif input == "4"
+                system "clear"
                 ping_check_all_proxies
             elsif input == "5"
+                system "clear"
                 assign_page
             end
         elsif input == "0"
@@ -55,13 +60,15 @@ class CommandLineInterface
         input = gets.chomp
         if ["1", "2", "3"].include?(input)
             if input == "1" 
-               p Email.all #Make it print info cleanly
-               puts "-------------------"
-               emails_page
+                system "clear"
+                p Email.all #Make it print info cleanly
+                puts "-------------------"
+                emails_page
             elsif input == "2"
                 system "clear"
 
             elsif input == "3"
+                system "clear"
                 main_menu
             end 
         end 
@@ -71,10 +78,14 @@ class CommandLineInterface
         puts "--------------------"
         puts "1. View RS Accounts"
         puts "2. Add New RS Accounts"
-        puts "3. Main Menu"
+        puts "3. Update Ban Status"
+        puts "4. Unban Request Denied"
+        puts "5. Delete Accounts"
+        puts "6. Main Menu"
         input = gets.chomp
-        if ["1", "2", "3"].include?(input)
+        if ["1", "2", "3", "4", "5", "6"].include?(input)
             if input == "1" 
+                system "clear"
                p Rsaccount.all #Make it print info cleanly
                puts "-------------------"
                rsaccounts_page
@@ -82,9 +93,84 @@ class CommandLineInterface
                 system "clear"
 
             elsif input == "3"
+                system "clear"
+                ban_flipper
+            elsif input == "4"
+                request_flipper
+            elsif input == "5"
+                delete_accounts
+            elsif input == "6"
+                system "clear"
                 main_menu
             end 
         end 
+    end
+
+    def delete_accounts
+        puts "---------------------"
+        puts "Enter All Accounts to Delete"
+        puts ""
+        # input = gets.chomp
+        input = "guarantee141@gmail.com, pspoole@gmail.com"
+        loginarr = input.split(", ") 
+        loginarr.find_all do |login|
+            account = Rsaccount.where("login = ?", login)
+            if account[0].banned && account[0].unban_request
+                puts "#{account[0].login} Ban Status: #{account[0].banned} Unban Request: #{account[0].unban_request}"
+                puts ""
+                puts "Both are true, deleting account"
+                account[0].destroy #destroy is not deleting proxies_account, destroy should delete parent & child objects
+            else 
+                puts "#{account[0].login} Ban Status: #{account[0].banned} Unban Request: #{account[0].unban_request}"
+                puts ""
+                if !account[0].banned
+                    puts "Ban Status is false. Please update to true before deleting"
+                    puts "Skipping #{account[0].login}"
+                elsif !account[0].unban_request
+                    puts "Unban Request is false. Please update to true before deleting"
+                    puts "Skipping #{account[0].login}"
+                end
+            end
+        end 
+        rsaccounts_page
+    end
+
+    def request_flipper
+        puts "---------------------"
+        puts "Enter All Accounts Request Denied"
+        puts ""
+        # input = gets.chomp
+        input = "guarantee141@gmail.com, pspoole@gmail.com"
+        loginarr = input.split(", ") 
+        loginarr.find_all do |login|
+            account = Rsaccount.where("login = ?", login)
+            account[0].toggle!(:unban_request)
+            if account[0].banned
+                puts "#{account[0].login} unban request has been denied."
+            else
+                puts "#{account[0].login} unban request has been approved."
+            end
+        end 
+        rsaccounts_page
+    end
+
+    def ban_flipper
+        puts "---------------------"
+        puts "Enter All Accounts to update Ban Status"
+        puts ""
+        # input = gets.chomp
+        input = "guarantee141@gmail.com, pspoole@gmail.com"
+        loginarr = input.split(", ") 
+        loginarr.find_all do |login|
+            account = Rsaccount.where("login = ?", login)
+            account[0].toggle!(:banned)
+            if account[0].banned
+                puts "#{account[0].login} has been banned"
+            else
+                puts "#{account[0].login} has been unbanned"
+            end
+        end 
+        rsaccounts_page
     end
 
     def proxies_page
@@ -95,13 +181,14 @@ class CommandLineInterface
         input = gets.chomp
         if ["1", "2", "3"].include?(input)
             if input == "1" 
-               p Proxy.all #Make it print info cleanly
-               puts "-------------------"
-               proxies_page
+                system "clear"
+                p Proxy.all #Make it print info cleanly
+                proxies_page
             elsif input == "2"
                 system "clear"
                 get_proxy_path
             elsif input == "3"
+                system "clear"
                 main_menu
             end 
         end 
@@ -124,12 +211,6 @@ class CommandLineInterface
     end
 
     def assign_proxies_to_new_rs
-        # noassignedproxy = []
-        # Rsaccount.all.each do |account|
-        #     if Proxies_Account.where("rsaccount_id = ?", account.id).empty?
-        #         noassignedproxy.push(account)
-        #     end
-        # end
         noassignedproxy = Rsaccount.all.find_all do |account|
             Proxies_Account.where("rsaccount_id = ?", account.id).empty?
         end
