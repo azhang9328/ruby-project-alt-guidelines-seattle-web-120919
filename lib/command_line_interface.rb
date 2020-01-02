@@ -195,13 +195,19 @@ class CommandLineInterface
     end
 
     def assign_page
-        system "clear"
-        puts "1. Assign Proxies To New RS Accounts"
+        puts "1. View Assignments"
+        puts "2. Assign Proxies To New RS Accounts"
+        puts "3. Assign Accounts To Emails"
         puts "0. Back To Main Menu"
         input = gets.chomp
-        if ["1"].include?(input)
+        if ["1", "2", "3"].include?(input)
             if input == "1" 
+                p Proxies_Account.all
+                assign_page
+            elsif input == "2"
                 assign_proxies_to_new_rs
+            elsif input == "3"
+                assign_accounts_to_emails
             end
         elsif input == "0"
             main_menu
@@ -210,11 +216,28 @@ class CommandLineInterface
         end
     end
 
+    def assign_accounts_to_emails
+        noemailassigned = Rsaccount.all.find_all do |account|
+            Rsaccount.where("email_id = ?", account.email_id).empty?
+        end
+        noemailassigned.each do |account|
+            randemail = Email.all.sample
+            Rsaccount.update(account.id, :email_id => randemail.id)
+            puts "Assigned #{randemail.login} to #{account.login}"
+        end
+        assign_page
+    end
+
     def assign_proxies_to_new_rs
         noassignedproxy = Rsaccount.all.find_all do |account|
             Proxies_Account.where("rsaccount_id = ?", account.id).empty?
         end
-        p noassignedproxy
+        noassignedproxy.each do |account|
+            randproxy = Proxy.all.sample
+            Proxies_Account.create(rsaccount_id: account.id, proxy_id: randproxy.id)
+            puts "Assigned #{randproxy.ip_address} to #{account.login}"
+        end
+        assign_page
     end
 
     def ping_check_all_proxies
