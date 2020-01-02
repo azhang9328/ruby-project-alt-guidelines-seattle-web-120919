@@ -22,9 +22,10 @@ class CommandLineInterface
         puts "2. Add New Proxies"
         puts "3. View RS Accounts"
         puts "4. Add New RS Accounts"
-        puts "9. Exit"
+        puts "5. Ping Check"
+        puts "0. Exit"
         input = gets.chomp
-        if ["1", "2", "3", "4"].include?(input)
+        if ["1", "2", "3", "4", "5"].include?(input)
             if input == "1" 
                p Proxy.all #Make it print info cleanly
                puts "-------------------"
@@ -38,11 +39,29 @@ class CommandLineInterface
                 main_menu
             elsif input == "4" 
                 main_menu #replace main menu return with adding accounts
+            elsif input == "5"
+                ping_check_all_proxies
             end
-        elsif input == "9"
+        elsif input == "0"
             exit_message
         else 
             not_an_option("main menu")
+        end
+    end
+
+    def ping_check_all_proxies
+        Proxy.all.each do |proxy|
+            ping_check(proxy.ip_address, proxy.port, 'http://whatismyip.akamai.com', nil)
+        end
+        main_menu
+    end
+
+    def ping_check(socks_server, socks_port, url, headers) #ping_check("107.172.1.142", 1080, 'http://whatismyip.akamai.com', nil)
+        uri = URI(url)
+        Net::HTTP.SOCKSProxy(socks_server, socks_port).start(uri.host, uri.port, use_ssl: (uri.scheme == 'https')) do |http|
+            http.read_timeout = 500
+            puts "launching #{uri} on #{socks_server}:#{socks_port}"
+            http.get(uri, headers)
         end
     end
 
