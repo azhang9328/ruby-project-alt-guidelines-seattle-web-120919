@@ -1,32 +1,20 @@
 class CommandLineInterface
 
-    # Email many -> accs one -> Proxy
-    # Email many <-> proxies through accs
-
     def run
         system "clear"
         greet
     end
 
     def greet
-        puts "Sorry you clicked opened Trash Account Creater"
-        puts ""
-        puts "No clue what this does? That's fine, enter anything for main menu."
+        welcome_text
         gets.chomp
         system "clear"
         main_menu
     end
 
     def main_menu
-        puts "Main Menu"
-        puts "---------"
-        puts ""
-        puts "1. Proxies Options"
-        puts "2. RS Accounts Options"
-        puts "3. Emails Options"
-        puts "4. Proxy Check"
-        puts "5. Assign Stuff"        
-        puts "0. Exit"
+        main_menu_header
+        main_menu_options
         input = gets.chomp
         if ["1", "2", "3", "4", "5"].include?(input)
             if input == "1" 
@@ -46,22 +34,23 @@ class CommandLineInterface
                 assign_page
             end
         elsif input == "0"
-            exit_message
+            main_menu_exit
         else 
             not_an_option("main menu")
         end
     end
 
     def emails_page
-        puts "--------------------"
-        puts "1. View Emails"
-        puts "2. Add New Emails"
-        puts "3. Main Menu"
+        email_options
         input = gets.chomp
         if ["1", "2", "3"].include?(input)
             if input == "1" 
                 system "clear"
-                p Email.all #Make it print info cleanly
+                counter = 1
+                Email.all.each do |obj|
+                    puts "#{counter}. #{obj.login} - #{obj.password}"
+                    counter += 1
+                end
                 puts "-------------------"
                 emails_page
             elsif input == "2"
@@ -71,22 +60,22 @@ class CommandLineInterface
                 system "clear"
                 main_menu
             end 
+        else 
+            not_an_option("email page")
         end 
     end
 
     def rsaccounts_page
-        puts "--------------------"
-        puts "1. View RS Accounts"
-        puts "2. Add New RS Accounts"
-        puts "3. Update Ban Status"
-        puts "4. Unban Request Denied"
-        puts "5. Delete Accounts"
-        puts "6. Main Menu"
+        rsaccount_options
         input = gets.chomp
         if ["1", "2", "3", "4", "5", "6"].include?(input)
             if input == "1" 
                 system "clear"
-               p Rsaccount.all #Make it print info cleanly
+                counter = 1
+                Rsaccount.all.each do |obj|
+                    puts "#{counter}. #{obj.login} - #{obj.password} - Banned? #{obj.banned}"
+                    counter += 1
+                end
                puts "-------------------"
                rsaccounts_page
             elsif input == "2"
@@ -103,19 +92,22 @@ class CommandLineInterface
                 system "clear"
                 main_menu
             end 
+        else 
+            not_an_option("rsaccount page")
         end 
     end
 
-    def proxies_page
-        puts "--------------------"
-        puts "1. View Proxies"
-        puts "2. Add New Proxies"
-        puts "3. Main Menu"
+    def proxies_page    
+        proxies_options
         input = gets.chomp
         if ["1", "2", "3"].include?(input)
             if input == "1" 
                 system "clear"
-                p Proxies.all #Make it print info cleanly
+                counter = 1
+                Proxies.all.each do |obj|
+                    puts "#{counter}. #{obj.ip_address}:#{obj.port}"
+                    counter += 1
+                end
                 proxies_page
             elsif input == "2"
                 system "clear"
@@ -124,18 +116,21 @@ class CommandLineInterface
                 system "clear"
                 main_menu
             end 
+        else 
+            not_an_option("proxies page")
         end 
     end
 
     def assign_page
-        puts "1. View Assignments"
-        puts "2. Assign Proxies To New RS Accounts"
-        puts "3. Assign Accounts To Emails"
-        puts "0. Back To Main Menu"
+        assign_options
         input = gets.chomp
         if ["1", "2", "3"].include?(input)
             if input == "1" 
-                p Proxies_Account.all
+                counter = 1
+                Proxies_Account.all.each do |obj|
+                    puts "#{counter}. " + Rsaccount.find(obj.rsaccount_id).login + " - " + Proxies.find(obj.proxy_id).ip_address
+                    counter += 1
+                end
                 assign_page
             elsif input == "2"
                 assign_proxies_to_new_rs
@@ -148,23 +143,5 @@ class CommandLineInterface
             not_an_option("assign page")
         end
     end    
-
-    def not_an_option(page)
-        system "clear"
-        puts "Try not fat fingering, that's not an option"
-        puts ""
-        if page == "main menu"
-        main_menu
-        elsif page == "add to proxies"
-            add_to_proxies
-        elsif page == "assign page"
-        end 
-    end
-
-    def exit_message
-        system "clear"
-        puts "Sucks."
-        exit
-    end
 
 end

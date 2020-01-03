@@ -1,13 +1,11 @@
 def get_proxy_path
-    puts ""
-    puts "Please give path to proxy file."
+    get_path_text
     proxies = parse_proxy_file(get_proxy_file)
-    add_to_proxies(proxies)
+    create_or_reject_proxies(proxies)
 end
 
-def add_to_proxies(proxies)
-    puts "Add to proxies?"
-    puts "y / n"
+def create_or_reject_proxies(proxies)
+    create_proxies_text
     input = gets.chomp
     if input == "y" 
         addedcount = 0

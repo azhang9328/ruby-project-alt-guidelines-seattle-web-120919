@@ -1,8 +1,7 @@
 def create_new_account
-    puts "Add New Account"
-    puts ""
+    new_account_text
     puts "Enter login"
-    input_login = gets.chomp
+    input_login = gets.chomp 
     puts ""
     puts "Enter pass"
     input_password = gets.chomp
@@ -18,9 +17,7 @@ def create_new_account
 end
 
 def delete_accounts
-    puts "---------------------"
-    puts "Enter All Accounts to Delete"
-    puts ""
+    delete_account_text("header")
     # input = gets.chomp
     input = "guarantee141@gmail.com, pspoole@gmail.com"
     loginarr = input.split(", ") 
@@ -28,8 +25,7 @@ def delete_accounts
         account = Rsaccount.where("login = ?", login)
         if account[0].banned && account[0].unban_request
             puts "#{account[0].login} Ban Status: #{account[0].banned} Unban Request: #{account[0].unban_request}"
-            puts ""
-            puts "Both are true, deleting account"
+            delete_account_text("both true")
             Proxies_Account.where(rsaccount_id: account[0].id).find_each do |join|
                 join.delete
             end
@@ -38,10 +34,10 @@ def delete_accounts
             puts "#{account[0].login} Ban Status: #{account[0].banned} Unban Request: #{account[0].unban_request}"
             puts ""
             if !account[0].banned
-                puts "Ban Status is false. Please update to true before deleting"
+                delete_account_text("ban false")
                 puts "Skipping #{account[0].login}"
             elsif !account[0].unban_request
-                puts "Unban Request is false. Please update to true before deleting"
+                delete_account_text("unban false")
                 puts "Skipping #{account[0].login}"
             end
         end
@@ -50,9 +46,7 @@ def delete_accounts
 end
 
 def request_flipper
-    puts "---------------------"
-    puts "Enter All Accounts Request Denied"
-    puts ""
+    request_flip_text
     # input = gets.chomp
     input = "guarantee141@gmail.com, pspoole@gmail.com"
     loginarr = input.split(", ") 
@@ -69,9 +63,7 @@ def request_flipper
 end
 
 def ban_flipper
-    puts "---------------------"
-    puts "Enter All Accounts to update Ban Status"
-    puts ""
+    ban_flip_text
     # input = gets.chomp
     input = "guarantee141@gmail.com, pspoole@gmail.com"
     loginarr = input.split(", ") 
