@@ -1,5 +1,4 @@
 class CommandLineInterface
-
     def run
         system "clear"
         greet
@@ -17,20 +16,16 @@ class CommandLineInterface
         main_menu_options
         input = gets.chomp
         if ["1", "2", "3", "4", "5"].include?(input)
+            system "clear"
             if input == "1" 
-                system "clear"
                 proxies_page
             elsif input == "2"
-                system "clear"
                 rsaccounts_page
             elsif input == "3"
-                system "clear"
                 emails_page
             elsif input == "4"
-                system "clear"
                 ping_check_all_proxies
             elsif input == "5"
-                system "clear"
                 assign_page
             end
         elsif input == "0"
@@ -44,20 +39,18 @@ class CommandLineInterface
         email_options
         input = gets.chomp
         if ["1", "2", "3"].include?(input)
+            system "clear"
             if input == "1" 
-                system "clear"
                 counter = 1
                 Email.all.each do |obj|
                     puts "#{counter}. #{obj.login} - #{obj.password}"
                     counter += 1
                 end
-                puts "-------------------"
                 emails_page
             elsif input == "2"
                 puts "I'll get to this later"
                 emails_page
             elsif input == "3"
-                system "clear"
                 main_menu
             end 
         else 
@@ -76,7 +69,6 @@ class CommandLineInterface
                     puts "#{counter}. #{obj.login} - #{obj.password} - Banned? #{obj.banned}"
                     counter += 1
                 end
-               puts "-------------------"
                rsaccounts_page
             elsif input == "2"
                 system "clear"
@@ -101,8 +93,8 @@ class CommandLineInterface
         proxies_options
         input = gets.chomp
         if ["1", "2", "3"].include?(input)
+            system "clear"
             if input == "1" 
-                system "clear"
                 counter = 1
                 Proxies.all.each do |obj|
                     puts "#{counter}. #{obj.ip_address}:#{obj.port}"
@@ -110,10 +102,8 @@ class CommandLineInterface
                 end
                 proxies_page
             elsif input == "2"
-                system "clear"
                 get_proxy_path
             elsif input == "3"
-                system "clear"
                 main_menu
             end 
         else 
@@ -124,7 +114,8 @@ class CommandLineInterface
     def assign_page
         assign_options
         input = gets.chomp
-        if ["1", "2", "3"].include?(input)
+        if ["1", "2", "3", "0"].include?(input)
+            system "clear"
             if input == "1" 
                 counter = 1
                 Proxies_Account.all.each do |obj|
@@ -136,9 +127,9 @@ class CommandLineInterface
                 assign_proxies_to_new_rs
             elsif input == "3"
                 assign_accounts_to_emails
+            elsif input == "0"
+                main_menu
             end
-        elsif input == "0"
-            main_menu
         else 
             not_an_option("assign page")
         end

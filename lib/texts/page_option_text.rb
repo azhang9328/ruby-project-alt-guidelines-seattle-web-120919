@@ -36,6 +36,8 @@ end
 def get_path_text
     puts ""
     puts "Please give path to proxy file."
+    puts ""
+    puts "Test File Path: /Users/azhang/Downloads/5_socks5_proxies.txt"
 end
 
 def create_proxies_text
@@ -44,12 +46,24 @@ def create_proxies_text
 end 
 
 #Account
-def new_account_text
-    puts "Add New Account"
-    puts ""
+def new_account_text(stage)
+    if stage == "header"
+        puts "Add New Account"
+        puts ""
+    elsif stage == "login"
+        puts "Enter login"
+    elsif stage == "pass"
+        puts ""
+        puts "Enter pass"
+    elsif stage == "user"
+        puts ""
+        puts "Enter user"
+        puts ""
+    end 
 end
 
 def delete_account_text(stage)
+    system "clear"
     if stage == "header"
         puts "---------------------"
         puts "Enter All Accounts to Delete"
@@ -61,6 +75,8 @@ def delete_account_text(stage)
         puts "Ban Status is false. Please update to true before deleting"
     elsif stage == "unban false"
         puts "Unban Request is false. Please update to true before deleting"
+    elsif stage == "0"
+        puts "No accounts to delete."
     end 
 end
 
@@ -76,3 +92,7 @@ def ban_flip_text
     puts ""
 end
 
+def does_not_exist
+    system "clear"
+    puts "Does not exist, spell it right this time."
+end

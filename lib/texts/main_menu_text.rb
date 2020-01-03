@@ -1,7 +1,6 @@
 def main_menu_header
     puts "Main Menu"
     puts "---------"
-    puts ""
 end
 
 def main_menu_options
