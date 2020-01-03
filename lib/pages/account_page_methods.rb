@@ -2,7 +2,7 @@ def create_new_account
     infonom = []
     new_account_text("header")
     new_account_text("login")
-    infonom.push(input = gets.chomp)
+    infonom.push(input = gets.chomp) #add check for whats being entered
     new_account_text("pass")
     infonom.push(input = gets.chomp)
     new_account_text("user")
@@ -14,7 +14,7 @@ def create_new_account
 end
 
 def input_logins
-    input = "guarantee141@gmail.com, pspoole@gmail.com"
+    input = gets.chomp
     loginarr = input.split(", ") 
 end
 

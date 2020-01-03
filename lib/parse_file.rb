@@ -8,7 +8,7 @@ end
 def get_proxy_file
     proxy_file_path = gets.chomp
     puts ""
-    until proxy_file_path.include?("Users")
+    until proxy_file_path =~ /\w+\/\w+/
         puts "Enter valid file path"
         puts ""
         proxy_file_path = gets.chomp

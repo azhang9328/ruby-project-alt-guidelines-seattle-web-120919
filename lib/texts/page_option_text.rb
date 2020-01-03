@@ -37,7 +37,7 @@ def get_path_text
     puts ""
     puts "Please give path to proxy file."
     puts ""
-    puts "Test File Path: /Users/azhang/Downloads/5_socks5_proxies.txt"
+    puts "Test File Path: lib/examplefile/5_socks5_proxies.txt"
 end
 
 def create_proxies_text
@@ -84,12 +84,14 @@ def request_flip_text
     puts "---------------------"
     puts "Enter All Accounts Request Denied"
     puts ""
+    puts "Example logins: guarantee141@gmail.com, pspoole@gmail.com"
 end
 
 def ban_flip_text
     puts "---------------------"
     puts "Enter All Accounts to update Ban Status"
     puts ""
+    puts "Example logins: guarantee141@gmail.com, pspoole@gmail.com"
 end
 
 def does_not_exist
