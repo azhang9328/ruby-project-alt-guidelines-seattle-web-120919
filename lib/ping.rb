@@ -18,5 +18,4 @@ def ping_check(socks_server, socks_port, url, headers) #ping_check("107.172.1.14
         puts "launching #{uri} on #{socks_server}:#{socks_port}"
         http.get(uri, headers)
     end
-    puts ""
 end

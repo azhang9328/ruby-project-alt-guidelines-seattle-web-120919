@@ -11,7 +11,7 @@ def infonom
     infonom = ["temp", "temp", "temp"]
     new_account_text("login")
     until infonom[0] =~ /\w+@\w+\.\w+/
-        infonom[0] = gets.chomp #add check for whats being entered
+        infonom[0] = gets.chomp
         system "clear"
         new_account_text("login")
     end

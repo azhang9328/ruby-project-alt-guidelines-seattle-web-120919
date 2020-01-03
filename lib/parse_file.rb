@@ -1,3 +1,5 @@
+#goal - parsing file checks contents to figure out whether its proxies or accounts or emails
+
 def parse_proxy_file(file)
     file.map do |proxy|
        proxyarr = proxy.split(/\D/)
