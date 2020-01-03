@@ -1,16 +1,25 @@
 def create_new_account
-    infonom = []
     new_account_text("header")
-    new_account_text("login")
-    infonom.push(input = gets.chomp) #add check for whats being entered
-    new_account_text("pass")
-    infonom.push(input = gets.chomp)
-    new_account_text("user")
-    infonom.push(input = gets.chomp)
-    newaccount = Rsaccount.create(login: infonom[0], password: infonom[1], username: infonom[2], banned: false, unban_request: false)
+    newaccount = infonom
+    createdaccount = Rsaccount.create(login: newaccount[0], password: newaccount[1], username: newaccount[2], banned: false, unban_request: false)
     system "clear"
-    puts "Created #{newaccount.login}"
+    puts "Created new account #{createdaccount.login}"
     rsaccounts_page
+end
+
+def infonom
+    infonom = ["temp", "temp", "temp"]
+    new_account_text("login")
+    until infonom[0] =~ /\w+@\w+\.\w+/
+        infonom[0] = gets.chomp #add check for whats being entered
+        system "clear"
+        new_account_text("login")
+    end
+    new_account_text("pass")
+    infonom[1] = gets.chomp
+    new_account_text("user")
+    infonom[2] = gets.chomp
+    infonom
 end
 
 def input_logins
